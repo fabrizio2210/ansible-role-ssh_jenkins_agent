@@ -1,0 +1,27 @@
+---
+# tasks file for ssh_jenkins_agent
+- name: Install java
+  apt:
+    name: 
+      - openjdk-8-jdk
+      - git
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Create group
+  group:
+    name: jenkins
+
+- name: Create user
+  user:
+    name: jenkins
+    home: /var/lib/jenkins
+    group: jenkins
+
+- name: Insert key to do ssh
+  authorized_key: 
+    user: jenkins
+    state: present
+    key: "{{ lookup('file', 'id_ssh_jenkins_agent') }}"
+
